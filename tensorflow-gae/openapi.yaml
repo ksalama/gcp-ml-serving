@@ -1,0 +1,19 @@
+swagger: "2.0"
+info:
+  title: "Babyweight Estimator"
+  description: "Get information of a country."
+  version: "1.0.0"
+# This field will be replaced by the deploy_api.sh script.
+host: "babyweight-estimator.endpoints.YOUR-PROJECT-ID.cloud.goog"
+schemes:
+  - "https"
+paths:
+  "/predict":
+    post:
+      description: "Estimate the baby weight given mother information."
+      operationId: "predict"
+      responses:
+        200:
+          description: "Success."
+        400:
+          description: "Incorrect input."
