@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: babyweight
+  name: babyweight-serving
+spec:
+  containers:
+    - image: gcr.io/ksalama-gcp-playground/babyweight-serving
+      name: babyweight-serving
+      ports:
+        - containerPort: 9000
+          name: http
+          protocol: TCP
