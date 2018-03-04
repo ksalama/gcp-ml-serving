@@ -1,5 +1,8 @@
 from process import inference
+from datetime import datetime
 
+
+INFERENCE_TYPE = 'local'  # local' | 'clme'
 
 instance = {
         'is_male': 'True',
@@ -12,5 +15,26 @@ instance = {
         'alcohol_use': 'False'
       }
 
-output = inference.estimate(instance)
-print(output)
+print("")
+print("Inference Type:{}".format(INFERENCE_TYPE))
+print("")
+
+predictor_fn = inference.init_predictor()
+
+time_start = datetime.utcnow()
+print("Inference started at {}".format(time_start.strftime("%H:%M:%S")))
+print(".......................................")
+
+for i in range(5):
+    if INFERENCE_TYPE == 'local':
+        output = inference.estimate_local(instance)
+    else:
+        output = inference.estimate_clme(instance)
+    print(output)
+
+time_end = datetime.utcnow()
+print(".......................................")
+print("Inference finished at {}".format(time_end.strftime("%H:%M:%S")))
+print("")
+time_elapsed = time_end - time_start
+print("Inference elapsed time: {} seconds".format(time_elapsed.total_seconds()))

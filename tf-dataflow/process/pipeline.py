@@ -1,7 +1,7 @@
 import apache_beam as beam
 import inference
 
-dataset_size = 10
+dataset_size = 10000
 
 HEADER = ['weight_pounds', 'is_male', 'mother_age', 'mother_race', 'plurality',
           'gestation_weeks', 'mother_married',
@@ -30,7 +30,7 @@ source_query = """
     """.format(dataset_size)
 
 
-def estimate(bq_row):
+def process_row(bq_row):
 
     # modify opaque numeric race code into human-readable data
     races = dict(zip([1, 2, 3, 4, 5, 6, 7, 18, 28, 39, 48],
@@ -52,11 +52,23 @@ def estimate(bq_row):
     instance['mother_married'] = str(bq_row['mother_married'])
     instance['cigarette_use'] = str(bq_row['cigarette_use'])
     instance['alcohol_use'] = str(bq_row['alcohol_use'])
+    instance['weight_pounds'] = str(bq_row['weight_pounds'])
 
-    estimated_weight = inference.estimate(instance)
+    return instance
 
-    instance['weight_pounds'] = bq_row['weight_pounds']
+
+def estimate(instance, inference_type):
+
+    weight_pounds = instance.pop('weight_pounds')
+
+    if inference_type == 'local':
+        estimated_weight = inference.estimate_local(instance)
+    else:
+        estimated_weight = inference.estimate_clme(instance)
+
     instance['estimated_weight'] = estimated_weight
+    instance['weight_pounds'] = weight_pounds
+
     return instance
 
 
@@ -67,7 +79,7 @@ def to_csv(instance):
     return csv_row
 
 
-def run_pipeline(sink_location, runner, args=None):
+def run_pipeline(inference_type, sink_location, runner, args=None):
 
     options = beam.pipeline.PipelineOptions(flags=[], **args)
 
@@ -76,11 +88,13 @@ def run_pipeline(sink_location, runner, args=None):
     (
             pipeline
             | 'Read from BigQuery' >> beam.io.Read(beam.io.BigQuerySource(query=source_query, use_standard_sql=True))
-            | 'Compute Estimates' >> beam.Map(estimate)
-            | 'Process to CSV' >> beam.Map(to_csv)
+            | 'Process BQ Row' >> beam.Map(process_row)
+            | 'Compute Estimate - {}'.format(inference_type) >> beam.Map(lambda instance: estimate(instance, inference_type))
+            | 'Convert to CSV' >> beam.Map(to_csv)
             | 'Write to Sink ' >> beam.io.Write(beam.io.WriteToText(sink_location,
                                                                    file_name_suffix='.csv',
-                                                                   num_shards=2))
+                                                                   #num_shards=2
+                                                                    ))
     )
 
     job = pipeline.run()
