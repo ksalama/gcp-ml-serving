@@ -63,8 +63,8 @@ def estimate(instance, inference_type):
 
     if inference_type == 'local':
         estimated_weight = inference.estimate_local(instance)
-    elif inference_type == 'clme':
-        estimated_weight = inference.estimate_clme(instance)
+    elif inference_type == 'cmle':
+        estimated_weight = inference.estimate_cmle(instance)
     else:
         estimated_weight = 'NA'
 

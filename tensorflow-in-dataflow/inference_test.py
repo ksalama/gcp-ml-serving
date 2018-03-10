@@ -2,7 +2,7 @@ from process import inference
 from datetime import datetime
 
 
-INFERENCE_TYPE = 'local'  # local' | 'clme'
+INFERENCE_TYPE = 'local'  # local' | 'cmle'
 
 instance = {
         'is_male': 'True',

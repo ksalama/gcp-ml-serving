@@ -41,7 +41,7 @@ def estimate_local(instance):
     return value
 
 
-def estimate_clme(instance):
+def estimate_cmle(instance):
 
     credentials = GoogleCredentials.get_application_default()
     api = discovery.build('ml', 'v1', credentials=credentials,
