@@ -29,7 +29,7 @@ for i in range(5):
     if INFERENCE_TYPE == 'local':
         output = inference.estimate_local(instance)
     else:
-        output = inference.estimate_clme(instance)
+        output = inference.estimate_cmle(instance)
     print(output)
 
 time_end = datetime.utcnow()
