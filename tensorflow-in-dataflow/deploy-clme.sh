@@ -6,7 +6,7 @@ BUCKET="your-bucket-name" # change to your bucket name
 MODEL_NAME="you_model_name" # change to your estimator name
 MODEL_VERSION="your.model.version" # change to your model version
 
-MODEL_LOCAL_LOCATION='/process/model'
+MODEL_LOCAL_LOCATION='process/model/*'
 MODEL_GCP_LOCATION=gs://${BUCKET}
 
 # upload saved model to GCS
