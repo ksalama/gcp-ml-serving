@@ -1,7 +1,7 @@
 import apache_beam as beam
 import inference
 
-dataset_size = 10000
+dataset_size = 10
 
 HEADER = ['weight_pounds', 'is_male', 'mother_age', 'mother_race', 'plurality',
           'gestation_weeks', 'mother_married',

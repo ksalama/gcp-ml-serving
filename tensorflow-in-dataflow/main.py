@@ -7,7 +7,7 @@ from datetime import datetime
 RUNNER = 'DataflowRunner' #  'DirectRunner' | 'DataflowRunner'
 PROJECT = 'ksalama-gcp-playground'
 BUCKET = 'ksalama-gcs-cloudml'
-INFERENCE_TYPE = 'None'  # local' | 'cmle' | 'None'
+INFERENCE_TYPE = 'local'  # local' | 'cmle' | 'None'
 
 local_dir = 'local_data'
 gcs_dir = 'gs://{0}/data/babyweight/tf-data-out'.format(BUCKET)

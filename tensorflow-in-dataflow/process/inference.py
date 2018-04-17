@@ -1,4 +1,5 @@
 import tensorflow as tf
+import logging
 import os
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
@@ -25,10 +26,13 @@ def init_predictor():
         dir_path = os.path.dirname(os.path.realpath(__file__))
         export_dir = os.path.join(dir_path, SAVED_MODEL_DIR)
 
-        predictor_fn = tf.contrib.predictor.from_saved_model(
-            export_dir=export_dir,
-            signature_def_key="predict"
-        )
+        if os.path.exists(export_dir):
+            predictor_fn = tf.contrib.predictor.from_saved_model(
+                export_dir=export_dir,
+                signature_def_key="predict"
+            )
+        else:
+            logging.ERROR("Model not found! - Invalid model path: {}".format(export_dir))
 
     return predictor_fn
 
